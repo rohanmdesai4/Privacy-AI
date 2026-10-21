@@ -2,225 +2,326 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>PrivacyShield AI | Data Privacy Protection</title>
 
     <link rel="stylesheet" href="style.css">
+
 </head>
+
 
 <body>
 
-    <!-- Navigation Bar -->
+    <!-- NAVBAR -->
+
     <header class="navbar">
 
         <a href="#" class="logo">
+
             <span class="logo-icon">🛡️</span>
-            <span>PrivacyShield <span class="ai">AI</span></span>
+
+            <span>
+                PrivacyShield
+                <span class="ai">AI</span>
+            </span>
+
         </a>
 
+
         <nav>
-            <a href="#dashboard">Dashboard</a>
-            <a href="#scanner">Privacy Scanner</a>
-            <a href="#activity">Activity</a>
+
+            <a href="#dashboard">
+                Dashboard
+            </a>
+
+            <a href="#scanner">
+                Privacy Scanner
+            </a>
+
+            <a href="#activity">
+                Activity
+            </a>
+
         </nav>
 
+
         <div class="status">
+
             <span class="status-dot"></span>
+
             Privacy Monitor
+
         </div>
 
     </header>
 
 
-    <!-- Main Content -->
-    <main class="container" id="dashboard">
 
-        <!-- Hero Section -->
+    <!-- MAIN -->
+
+    <main id="dashboard" class="container">
+
+        <!-- HEADING -->
+
         <section class="hero">
 
-            <div class="hero-content">
+            <div>
 
-                <span class="eyebrow">
-                    INTELLIGENT DATA PROTECTION
-                </span>
-
-                <h1>
-                    Your Data.<br>
-                    <span>Your Privacy.</span> Always.
-                </h1>
-
-                <p>
-                    Detect sensitive information through context,
-                    identify privacy risks, and protect confidential
-                    business data before AI processing.
+                <p class="eyebrow">
+                    CONTEXT-AWARE DATA PRIVACY
                 </p>
 
-                <a href="#scanner" class="primary-button">
-                    Start Privacy Scan →
-                </a>
+                <h1>
+                    Protect sensitive
+                    <span>workplace data</span>
+                    before it reaches AI.
+                </h1>
 
-            </div>
+                <p class="hero-text">
 
-            <div class="hero-shield">
-                <div class="shield-circle">
-                    <span>🛡️</span>
-                </div>
+                    Detect sensitive information,
+                    understand privacy risk and
+                    automatically protect confidential data.
 
-                <div class="floating-badge">
-                    <span class="status-dot"></span>
-                    Privacy Protection Active
-                </div>
+                </p>
+
             </div>
 
         </section>
 
 
-        <!-- Statistics -->
-        <section class="stats-grid">
 
-            <article class="stat-card">
-                <div class="stat-icon blue">⌕</div>
-                <p>Total Scans</p>
-                <h2 id="totalScans">0</h2>
-                <span>Scans performed this session</span>
-            </article>
+        <!-- SCANNER -->
 
-            <article class="stat-card">
-                <div class="stat-icon red">⚠</div>
-                <p>Risks Detected</p>
-                <h2 id="totalRisks">0</h2>
-                <span>Potential sensitive items found</span>
-            </article>
-
-            <article class="stat-card">
-                <div class="stat-icon green">✓</div>
-                <p>Privacy Actions</p>
-                <h2 id="totalActions">0</h2>
-                <span>Redactions applied</span>
-            </article>
-
-        </section>
-
-
-        <!-- Privacy Scanner -->
-        <section class="scanner-section" id="scanner">
+        <section
+            class="scanner-section"
+            id="scanner"
+        >
 
             <div class="section-heading">
 
                 <div>
-                    <span class="eyebrow">CONTEXTUAL ANALYSIS</span>
-                    <h2>Privacy Scanner</h2>
 
-                    <p>
-                        Analyze text for potentially sensitive business
-                        information before sharing it with an AI system.
+                    <p class="eyebrow">
+                        PRIVACY SCANNER
                     </p>
-                </div>
 
-                <span class="demo-badge">FRONTEND DEMO</span>
+                    <h2>
+                        Analyze your text
+                    </h2>
+
+                </div>
 
             </div>
 
 
+
             <div class="scanner-grid">
 
-                <!-- Input Panel -->
+
+                <!-- LEFT PANEL -->
+
                 <article class="panel">
 
                     <div class="panel-header">
-                        <h3>📝 Input Data</h3>
-                        <span class="small-label">TEXT ANALYSIS</span>
+
+                        <div>
+
+                            <h3>
+                                📝 Input Data
+                            </h3>
+
+                            <span class="small-label">
+                                TEXT ANALYSIS
+                            </span>
+
+                        </div>
+
                     </div>
 
+
                     <label for="inputText">
+
                         Enter your business text
+
                     </label>
+
 
                     <textarea
                         id="inputText"
-                        placeholder="Example: Our confidential project launches on December 15. The customer database contains personal information..."
+                        placeholder="Enter workplace text here..."
                     ></textarea>
 
+
                     <div class="input-footer">
-                        <span id="charCount">0 characters</span>
+
+                        <span id="charCount">
+                            0 characters
+                        </span>
 
                         <button
-                            type="button"
-                            class="text-button"
-                            id="clearButton"
+                            id="clearBtn"
+                            class="clear-btn"
                         >
                             Clear text
                         </button>
+
                     </div>
 
+
                     <button
-                        type="button"
-                        class="primary-button full-width"
-                        id="scanButton"
+                        id="analyzeBtn"
+                        class="analyze-btn"
                     >
+
                         🔍 Analyze Privacy Risks
+
                     </button>
 
-                    <p class="privacy-note">
-                        Demo only: enter fictional data, not real
-                        passwords or confidential business information.
+
+                    <p class="demo-note">
+
+                        Demo only: enter fictional data,
+                        not real passwords or confidential
+                        business information.
+
                     </p>
 
                 </article>
 
 
-                <!-- Results Panel -->
+
+                <!-- RIGHT PANEL -->
+
                 <article class="panel results-panel">
 
+
                     <div class="panel-header">
-                        <h3>🔐 Analysis Results</h3>
-                        <span class="small-label">SCAN REPORT</span>
+
+                        <div>
+
+                            <h3>
+                                🔐 Privacy Analysis
+                            </h3>
+
+                            <span class="small-label">
+                                PROTECTION REPORT
+                            </span>
+
+                        </div>
+
                     </div>
 
-                    <div id="emptyState" class="empty-state">
 
-                        <div class="empty-icon">🔎</div>
+                    <!-- READY MESSAGE -->
 
-                        <h3>Ready to Analyze</h3>
+                    <div
+                        id="readyMessage"
+                        class="ready-message"
+                    >
+
+                        <div class="ready-icon">
+                            🔎
+                        </div>
+
+                        <h3>
+                            Ready to Analyze
+                        </h3>
 
                         <p>
-                            Enter sample text and start a scan to see
-                            potential privacy risks and recommended actions.
+                            Enter sample text and start a scan
+                            to see potential privacy risks
+                            and recommended protection.
                         </p>
 
                     </div>
 
 
-                    <div id="results" hidden>
+                    <!-- RESULTS -->
+
+                    <div
+                        id="results"
+                        class="results hidden"
+                    >
+
+
+                        <!-- OVERALL RISK -->
 
                         <div class="risk-summary">
 
                             <div>
-                                <span class="result-label">Overall Risk</span>
-                                <h2 id="riskLevel">LOW</h2>
+
+                                <span>
+                                    Overall Risk
+                                </span>
+
+                                <strong id="overallRisk">
+                                    LOW
+                                </strong>
+
                             </div>
 
-                            <div>
-                                <span class="result-label">Items Found</span>
-                                <h2 id="riskCount">0</h2>
+
+                            <div class="items-count">
+
+                                <span>
+                                    Items Found
+                                </span>
+
+                                <strong id="itemsFound">
+                                    0
+                                </strong>
+
                             </div>
 
                         </div>
 
-                        <h3 class="subheading">Detected Risks</h3>
 
-                        <div id="riskList"></div>
 
-                        <h3 class="subheading">Protected Output</h3>
+                        <!-- DETECTED RISKS -->
 
-                        <div
-                            id="redactedOutput"
-                            class="redacted-output"
-                        ></div>
+                        <div class="result-section">
 
-                        <p id="actionSummary" class="action-summary"></p>
+                            <h3>
+                                Detected Risks
+                            </h3>
+
+                            <div
+                                id="detectedRisks"
+                                class="risk-list"
+                            >
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- PROTECTED OUTPUT -->
+
+                        <div class="result-section">
+
+                            <h3>
+                                Protected Output
+                            </h3>
+
+
+                            <div
+                                id="protectedOutput"
+                                class="protected-output"
+                            >
+                                No protected output yet.
+                            </div>
+
+                        </div>
+
 
                     </div>
 
@@ -231,70 +332,36 @@
         </section>
 
 
-        <!-- Activity Section -->
-        <section class="activity-section" id="activity">
 
-            <div class="section-heading">
-                <div>
-                    <span class="eyebrow">MONITORING</span>
-                    <h2>Recent Scan Activity</h2>
+        <!-- ACTIVITY -->
 
-                    <p>
-                        Review the results of scans performed
-                        during this session.
-                    </p>
-                </div>
-            </div>
+        <section
+            id="activity"
+            class="activity-section"
+        >
 
-            <div class="table-wrapper">
+            <p class="eyebrow">
+                MONITORING
+            </p>
 
-                <table>
+            <h2>
+                Privacy activity
+            </h2>
 
-                    <thead>
-                        <tr>
-                            <th>Scan</th>
-                            <th>Risk Level</th>
-                            <th>Risks Found</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
+            <div class="activity-card">
 
-                    <tbody id="activityBody">
+                <span class="activity-dot"></span>
 
-                        <tr id="noActivity">
-                            <td colspan="4" class="no-activity">
-                                No scans performed yet.
-                            </td>
-                        </tr>
-
-                    </tbody>
-
-                </table>
+                Privacy protection system ready.
 
             </div>
 
         </section>
 
-
-        <!-- Footer -->
-        <footer>
-
-            <a href="#" class="logo">
-                🛡️ PrivacyShield AI
-            </a>
-
-            <p>
-                Protecting sensitive information through smarter privacy.
-            </p>
-
-            <span>Hackathon Prototype · Frontend Demonstration</span>
-
-        </footer>
-
     </main>
 
 
-    <!-- JavaScript -->
+
     <script src="script.js"></script>
 
 </body>

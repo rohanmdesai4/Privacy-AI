@@ -1,509 +1,789 @@
-// PrivacyShield AI
-// Educational frontend demonstration.
-// Rule-based detection with context-aware risk assessment.
+document.addEventListener("DOMContentLoaded", () => {
 
-const inputText = document.getElementById("inputText");
-const scanButton = document.getElementById("scanButton");
-const clearButton = document.getElementById("clearButton");
+    const API_URL = "http://127.0.0.1:8000";
 
-const charCount = document.getElementById("charCount");
-const emptyState = document.getElementById("emptyState");
-const results = document.getElementById("results");
+    // ----------------------------------------------------
+    // FIND TEXTAREA
+    // ----------------------------------------------------
 
-const riskLevel = document.getElementById("riskLevel");
-const riskCount = document.getElementById("riskCount");
-const riskList = document.getElementById("riskList");
-const redactedOutput = document.getElementById("redactedOutput");
-const actionSummary = document.getElementById("actionSummary");
+    const textarea = document.querySelector("textarea");
 
-const totalScans = document.getElementById("totalScans");
-const totalRisks = document.getElementById("totalRisks");
-const totalActions = document.getElementById("totalActions");
-
-const activityBody = document.getElementById("activityBody");
-
-let scanNumber = 0;
-let riskTotal = 0;
-let actionTotal = 0;
-
-
-// --------------------------------------------------
-// 1. SENSITIVE INFORMATION DETECTION RULES
-// --------------------------------------------------
-
-const detectionRules = [
-    {
-        name: "Credential Value",
-        pattern: /\b(?:password|passwd|passcode|api[_ -]?key|access[_ -]?token|secret[_ -]?key)\b\s*(?::|=|\bis\b)\s*["']?([A-Za-z0-9_./+=-]{6,})["']?/gi,
-        group: 1,
-        severity: "HIGH",
-        explanation:
-            "A credential label appears to be followed by a possible secret value.",
-        replacement: "[CREDENTIAL REDACTED]"
-    },
-
-    {
-        name: "Email Address",
-        pattern: /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi,
-        group: 0,
-        severity: "MEDIUM",
-        explanation:
-            "An email address may identify a person or organization.",
-        replacement: "[EMAIL REDACTED]"
-    },
-
-    {
-        name: "Phone Number",
-        pattern: /(?<!\w)(?:\+91[\s.-]?)?[6-9]\d{9}(?!\w)/g,
-        group: 0,
-        severity: "MEDIUM",
-        explanation:
-            "A number matches a common Indian mobile-number format. Verify that it is not personal contact information.",
-        replacement: "[PHONE NUMBER REDACTED]"
-    },
-
-    {
-        name: "Confidential Business Information",
-        pattern: /\b(?:confidential|proprietary|trade secret|internal use only|non-public)\b/gi,
-        group: 0,
-        severity: "HIGH",
-        explanation:
-            "The wording suggests that some information may be restricted or confidential.",
-        replacement: "[CONFIDENTIAL REFERENCE REDACTED]"
-    },
-
-    {
-        name: "Personal or Sensitive Records",
-        pattern: /\b(?:personal information|customer records|employee records|medical records|bank account details|patient records)\b/gi,
-        group: 0,
-        severity: "HIGH",
-        explanation:
-            "The text refers to potentially sensitive personal, medical, or financial records.",
-        replacement: "[SENSITIVE RECORD REFERENCE REDACTED]"
-    },
-
-    {
-        name: "Financial Information",
-        pattern: /\b(?:salary|payroll|bank details|financial statement|account balance|credit card number)\b/gi,
-        group: 0,
-        severity: "MEDIUM",
-        explanation:
-            "The wording may refer to private financial information.",
-        replacement: "[FINANCIAL REFERENCE REDACTED]"
-    },
-
-    {
-        name: "Potential Payment Card Number",
-        pattern: /(?<!\d)(?:\d[ -]?){12,18}\d(?!\d)/g,
-        group: 0,
-        severity: "HIGH",
-        explanation:
-            "A long digit sequence may be sensitive financial information. This rule does not verify whether it is a valid card number.",
-        replacement: "[POSSIBLE CARD NUMBER REDACTED]"
-    }
-];
-
-
-// --------------------------------------------------
-// 2. CONTEXT ANALYSIS RULES
-// --------------------------------------------------
-
-const sharingPattern =
-    /\b(?:share|send|forward|publish|post|upload|disclose|expose|email|message|submit)\b/i;
-
-const externalRecipientPattern =
-    /\b(?:public|publicly|everyone|anyone|social media|external users?|unknown recipients?|strangers|public website|internet)\b/i;
-
-const privateRecipientPattern =
-    /\b(?:private message|trusted colleague|authorized team|internal team|official support|my doctor|my lawyer)\b/i;
-
-
-// Character counter.
-
-inputText.addEventListener("input", function () {
-    charCount.textContent = inputText.value.length + " characters";
-});
-
-
-// --------------------------------------------------
-// 3. SCAN BUTTON
-// --------------------------------------------------
-
-scanButton.addEventListener("click", function () {
-    const originalText = inputText.value;
-
-    if (!originalText.trim()) {
-        alert("Please enter some sample text before scanning.");
-        inputText.focus();
+    if (!textarea) {
+        console.error("ERROR: Textarea not found.");
         return;
     }
 
-    scanButton.disabled = true;
-    scanButton.textContent = "Analyzing...";
 
-    setTimeout(function () {
-        try {
-            analyzeText(originalText);
-        } catch (error) {
-            console.error("Privacy scan failed:", error);
-            alert("The scan could not be completed. Please try again.");
-        } finally {
-            scanButton.disabled = false;
-            scanButton.textContent = "🔍 Analyze Privacy Risks";
+    // ----------------------------------------------------
+    // FIND ANALYZE BUTTON
+    // ----------------------------------------------------
+
+    const buttons = Array.from(
+        document.querySelectorAll("button")
+    );
+
+    const analyzeButton = buttons.find(button =>
+        button.textContent
+            .trim()
+            .toLowerCase()
+            .includes("analyze privacy")
+    );
+
+    if (!analyzeButton) {
+        console.error(
+            "ERROR: Analyze Privacy button not found."
+        );
+        return;
+    }
+
+
+    // ----------------------------------------------------
+    // FIND RESULT AREA
+    // ----------------------------------------------------
+
+    function findResultArea() {
+
+        const allElements = Array.from(
+            document.querySelectorAll("*")
+        );
+
+
+        // Find "Ready to Analyze"
+
+        const readyElement = allElements.find(element => {
+
+            return (
+                element.children.length === 0 &&
+                element.textContent
+                    .trim()
+                    .toLowerCase() ===
+                "ready to analyze"
+            );
+
+        });
+
+
+        if (readyElement) {
+
+            let parent =
+                readyElement.parentElement;
+
+            for (
+                let i = 0;
+                i < 5 && parent;
+                i++
+            ) {
+
+                if (
+                    parent.querySelector("h2") ||
+                    parent.querySelector("h3")
+                ) {
+                    return parent;
+                }
+
+                parent =
+                    parent.parentElement;
+            }
+
+            return readyElement.parentElement;
         }
-    }, 150);
-});
 
 
-// --------------------------------------------------
-// 4. DETECT SENSITIVE INFORMATION
-// --------------------------------------------------
+        // Backup: find Privacy Analysis heading
 
-function detectSensitiveInformation(text) {
-    const detectedRisks = [];
-    const matchesToRedact = [];
+        const privacyHeading =
+            allElements.find(element => {
 
-    detectionRules.forEach(function (rule) {
-        rule.pattern.lastIndex = 0;
+                return (
+                    element.children.length === 0 &&
+                    element.textContent
+                        .trim()
+                        .toLowerCase() ===
+                    "privacy analysis"
+                );
 
-        const matches = [...text.matchAll(rule.pattern)];
+            });
 
-        let validMatchCount = 0;
 
-        matches.forEach(function (match) {
-            const groupIndex = rule.group || 0;
-            const sensitiveValue = match[groupIndex];
+        if (privacyHeading) {
+            return privacyHeading.parentElement;
+        }
 
-            if (!sensitiveValue) {
+
+        return null;
+    }
+
+
+    // ----------------------------------------------------
+    // ESCAPE HTML
+    // ----------------------------------------------------
+
+    function escapeHTML(value) {
+
+        if (
+            value === null ||
+            value === undefined
+        ) {
+            return "";
+        }
+
+
+        return String(value)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+
+    // ----------------------------------------------------
+    // FORMAT RISK OBJECT
+    // ----------------------------------------------------
+
+    function formatRisk(risk) {
+
+        // If backend sends normal text
+        if (
+            typeof risk === "string" ||
+            typeof risk === "number"
+        ) {
+
+            return escapeHTML(risk);
+        }
+
+
+        // If backend sends an object
+        if (
+            typeof risk === "object" &&
+            risk !== null
+        ) {
+
+            // Try common field names first
+
+            const title =
+                risk.type ||
+                risk.category ||
+                risk.entity ||
+                risk.name ||
+                risk.label ||
+                "Privacy Risk";
+
+
+            const description =
+                risk.message ||
+                risk.description ||
+                risk.reason ||
+                risk.details ||
+                "";
+
+
+            const value =
+                risk.value ||
+                risk.text ||
+                risk.detected_text ||
+                risk.content ||
+                "";
+
+
+            let html = `
+                <div style="
+                    padding: 12px;
+                    margin: 8px 0;
+                    border-radius: 8px;
+                    background: rgba(255,255,255,0.08);
+                ">
+                    <strong>
+                        ⚠️ ${escapeHTML(title)}
+                    </strong>
+            `;
+
+
+            if (description) {
+
+                html += `
+                    <div style="
+                        margin-top: 5px;
+                    ">
+                        ${escapeHTML(description)}
+                    </div>
+                `;
+            }
+
+
+            if (value) {
+
+                html += `
+                    <div style="
+                        margin-top: 5px;
+                        font-size: 13px;
+                        opacity: 0.85;
+                    ">
+                        Detected:
+                        ${escapeHTML(value)}
+                    </div>
+                `;
+            }
+
+
+            // If none of the expected fields exist,
+            // display the actual object instead of
+            // [object Object].
+
+            if (
+                !description &&
+                !value &&
+                !risk.type &&
+                !risk.category &&
+                !risk.entity &&
+                !risk.name &&
+                !risk.label
+            ) {
+
+                html += `
+                    <div style="
+                        margin-top: 5px;
+                        font-size: 13px;
+                    ">
+                        ${escapeHTML(
+                            JSON.stringify(risk)
+                        )}
+                    </div>
+                `;
+            }
+
+
+            html += `</div>`;
+
+
+            return html;
+        }
+
+
+        return escapeHTML(String(risk));
+    }
+
+
+    // ----------------------------------------------------
+    // DISPLAY RESULT
+    // ----------------------------------------------------
+
+    function showResult(data) {
+
+        console.log(
+            "API RESULT:",
+            data
+        );
+
+
+        const resultArea =
+            findResultArea();
+
+
+        if (!resultArea) {
+
+            console.error(
+                "Could not find Privacy Analysis result area."
+            );
+
+
+            alert(
+                "Backend worked, but the Privacy Analysis area could not be found."
+            );
+
+
+            return;
+        }
+
+
+        // ------------------------------------------------
+        // GET BACKEND DATA
+        // ------------------------------------------------
+
+        const privacyLevel =
+            data.privacy_level ??
+            "Unknown";
+
+
+        const protectedText =
+            data.processed_text ??
+            data.protected_text ??
+            "";
+
+
+        const originalText =
+            data.original_text ??
+            "";
+
+
+        const risks =
+            Array.isArray(data.risks)
+                ? data.risks
+                : [];
+
+
+        const itemsFound =
+            Array.isArray(data.items_found)
+                ? data.items_found
+                : [];
+
+
+        // ------------------------------------------------
+        // PRIVACY RISKS
+        // ------------------------------------------------
+
+        let risksHTML = "";
+
+
+        if (risks.length === 0) {
+
+            risksHTML = `
+                <div
+                    class="privacy-result-box"
+                    style="
+                        margin-top: 15px;
+                        padding: 15px;
+                        border-radius: 10px;
+                        background: rgba(255,255,255,0.08);
+                    "
+                >
+
+                    <h3>
+                        🛡️ Privacy Risks
+                    </h3>
+
+                    <p>
+                        ✅ No privacy risks detected.
+                    </p>
+
+                </div>
+            `;
+
+        } else {
+
+            risksHTML = `
+                <div
+                    class="privacy-result-box"
+                    style="
+                        margin-top: 15px;
+                        padding: 15px;
+                        border-radius: 10px;
+                        background: rgba(255,255,255,0.08);
+                    "
+                >
+
+                    <h3>
+                        ⚠️ Privacy Risks
+                    </h3>
+
+                    <div>
+
+                        ${risks
+                            .map(risk =>
+                                formatRisk(risk)
+                            )
+                            .join("")
+                        }
+
+                    </div>
+
+                </div>
+            `;
+        }
+
+
+        // ------------------------------------------------
+        // SENSITIVE INFORMATION
+        // ------------------------------------------------
+
+        let itemsHTML = "";
+
+
+        if (itemsFound.length > 0) {
+
+            itemsHTML = `
+                <div
+                    class="privacy-result-box"
+                    style="
+                        margin-top: 15px;
+                        padding: 15px;
+                        border-radius: 10px;
+                        background: rgba(255,255,255,0.08);
+                    "
+                >
+
+                    <h3>
+                        🔎 Sensitive Information Found
+                    </h3>
+
+                    <ul>
+
+                        ${itemsFound
+                            .map(item => {
+
+                                if (
+                                    typeof item === "object" &&
+                                    item !== null
+                                ) {
+
+                                    return `
+                                        <li>
+                                            ${escapeHTML(
+                                                JSON.stringify(item)
+                                            )}
+                                        </li>
+                                    `;
+                                }
+
+
+                                return `
+                                    <li>
+                                        ${escapeHTML(item)}
+                                    </li>
+                                `;
+
+                            })
+                            .join("")
+                        }
+
+                    </ul>
+
+                </div>
+            `;
+        }
+
+
+        // ------------------------------------------------
+        // PRIVACY LEVEL
+        // ------------------------------------------------
+
+        const level =
+            String(privacyLevel)
+                .toLowerCase();
+
+
+        let levelIcon = "🔐";
+
+
+        if (level.includes("critical")) {
+            levelIcon = "🚨";
+        }
+        else if (level.includes("high")) {
+            levelIcon = "🔴";
+        }
+        else if (level.includes("medium")) {
+            levelIcon = "🟠";
+        }
+        else if (level.includes("low")) {
+            levelIcon = "🟢";
+        }
+
+
+        // ------------------------------------------------
+        // FINAL RESULT
+        // ------------------------------------------------
+
+        resultArea.innerHTML = `
+
+            <div
+                style="
+                    width: 100%;
+                    box-sizing: border-box;
+                    padding: 20px;
+                "
+            >
+
+                <h2>
+                    🔐 Privacy Analysis
+                </h2>
+
+
+                <!-- PRIVACY LEVEL -->
+
+                <div
+                    style="
+                        margin-top: 15px;
+                        padding: 18px;
+                        border-radius: 12px;
+                        background: rgba(255,255,255,0.12);
+                        text-align: center;
+                    "
+                >
+
+                    <h3>
+                        Privacy Level
+                    </h3>
+
+
+                    <div
+                        style="
+                            font-size: 24px;
+                            font-weight: bold;
+                            margin-top: 8px;
+                        "
+                    >
+
+                        ${levelIcon}
+                        ${escapeHTML(
+                            String(
+                                privacyLevel
+                            ).toUpperCase()
+                        )}
+
+                    </div>
+
+                </div>
+
+
+                <!-- RISKS -->
+
+                ${risksHTML}
+
+
+                <!-- SENSITIVE ITEMS -->
+
+                ${itemsHTML}
+
+
+                <!-- PROTECTED TEXT -->
+
+                <div
+                    class="privacy-result-box"
+                    style="
+                        margin-top: 15px;
+                        padding: 15px;
+                        border-radius: 10px;
+                        background: rgba(255,255,255,0.08);
+                    "
+                >
+
+                    <h3>
+                        🛡️ Protected Text
+                    </h3>
+
+
+                    <div
+                        style="
+                            margin-top: 10px;
+                            padding: 15px;
+                            border-radius: 10px;
+                            background: rgba(0,0,0,0.25);
+                            white-space: pre-wrap;
+                            word-break: break-word;
+                        "
+                    >
+
+                        ${escapeHTML(
+                            protectedText
+                        )}
+
+                    </div>
+
+                </div>
+
+
+                <!-- ORIGINAL TEXT -->
+
+                <div
+                    class="privacy-result-box"
+                    style="
+                        margin-top: 15px;
+                        padding: 15px;
+                        border-radius: 10px;
+                        background: rgba(255,255,255,0.05);
+                    "
+                >
+
+                    <h3>
+                        📄 Original Text
+                    </h3>
+
+
+                    <div
+                        style="
+                            margin-top: 10px;
+                            padding: 15px;
+                            border-radius: 10px;
+                            background: rgba(0,0,0,0.15);
+                            white-space: pre-wrap;
+                            word-break: break-word;
+                            opacity: 0.85;
+                        "
+                    >
+
+                        ${escapeHTML(
+                            originalText
+                        )}
+
+                    </div>
+
+                </div>
+
+
+            </div>
+        `;
+
+
+        console.log(
+            "RESULT DISPLAYED SUCCESSFULLY"
+        );
+    }
+
+
+    // ----------------------------------------------------
+    // ANALYZE BUTTON
+    // ----------------------------------------------------
+
+    analyzeButton.addEventListener(
+        "click",
+        async (event) => {
+
+            event.preventDefault();
+
+
+            const text =
+                textarea.value.trim();
+
+
+            if (!text) {
+
+                alert(
+                    "Please enter some text first."
+                );
+
                 return;
             }
 
-            // Find the actual sensitive value rather than
-            // replacing its descriptive label.
-            const relativeStart =
-                groupIndex === 0
-                    ? 0
-                    : match[0].lastIndexOf(sensitiveValue);
 
-            const start = match.index + relativeStart;
-            const end = start + sensitiveValue.length;
+            const oldButtonText =
+                analyzeButton.innerHTML;
 
-            matchesToRedact.push({
-                start: start,
-                end: end,
-                replacement: rule.replacement,
-                name: rule.name
-            });
 
-            validMatchCount++;
-        });
+            analyzeButton.disabled = true;
 
-        if (validMatchCount > 0) {
-            detectedRisks.push({
-                name: rule.name,
-                severity: rule.severity,
-                explanation: rule.explanation,
-                count: validMatchCount
-            });
+            analyzeButton.innerHTML =
+                "⏳ Analyzing...";
+
+
+            try {
+
+                console.log(
+                    "Sending request to:",
+                    `${API_URL}/privacy`
+                );
+
+
+                // ------------------------------------------------
+                // CALL FASTAPI
+                // ------------------------------------------------
+
+                const response =
+                    await fetch(
+                        `${API_URL}/privacy`,
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json",
+
+                                "Accept":
+                                    "application/json"
+                            },
+
+                            body: JSON.stringify({
+                                text: text
+                            })
+                        }
+                    );
+
+
+                console.log(
+                    "HTTP Status:",
+                    response.status
+                );
+
+
+                // Get raw response
+
+                const responseText =
+                    await response.text();
+
+
+                console.log(
+                    "Backend Response:",
+                    responseText
+                );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        `HTTP ${response.status}: ${responseText}`
+                    );
+                }
+
+
+                // ------------------------------------------------
+                // PARSE JSON
+                // ------------------------------------------------
+
+                let data;
+
+
+                try {
+
+                    data =
+                        JSON.parse(
+                            responseText
+                        );
+
+                }
+                catch (error) {
+
+                    throw new Error(
+                        "Backend did not return valid JSON."
+                    );
+                }
+
+
+                // ------------------------------------------------
+                // DISPLAY
+                // ------------------------------------------------
+
+                showResult(data);
+
+
+            }
+            catch (error) {
+
+                console.error(
+                    "PRIVACY API ERROR:",
+                    error
+                );
+
+
+                alert(
+                    "Error while analyzing text.\n\n" +
+                    error.message
+                );
+
+            }
+            finally {
+
+                analyzeButton.disabled =
+                    false;
+
+                analyzeButton.innerHTML =
+                    oldButtonText;
+            }
+
         }
-    });
-
-    return {
-        detectedRisks: detectedRisks,
-        matchesToRedact: matchesToRedact
-    };
-}
-
-
-// --------------------------------------------------
-// 5. ANALYZE CONTEXT AND RECOMMEND ACTIONS
-// --------------------------------------------------
-
-function analyzeContext(text, detectedRisks) {
-    const sharesInformation = sharingPattern.test(text);
-    const mentionsExternalRecipient =
-        externalRecipientPattern.test(text);
-    const mentionsPrivateRecipient =
-        privateRecipientPattern.test(text);
-
-    const hasHighRisk = detectedRisks.some(function (risk) {
-        return risk.severity === "HIGH";
-    });
-
-    const hasSensitiveInformation = detectedRisks.length > 0;
-
-    let contextRisk = "LOW";
-    let explanation =
-        "No clear high-risk sharing pattern was detected by the current rules.";
-
-    if (
-        hasSensitiveInformation &&
-        sharesInformation &&
-        mentionsExternalRecipient
-    ) {
-        contextRisk = "HIGH";
-
-        explanation =
-            "The text contains potential sensitive information and mentions sharing or sending information to a public or external audience. Verify authorization before sharing.";
-    } else if (
-        hasSensitiveInformation &&
-        sharesInformation
-    ) {
-        contextRisk = hasHighRisk ? "HIGH" : "MEDIUM";
-
-        explanation =
-            "The text contains potential sensitive information and a sharing-related action. Check the recipient and remove unnecessary sensitive details before sharing.";
-    } else if (hasHighRisk) {
-        contextRisk = "HIGH";
-
-        explanation =
-            "Potentially sensitive credentials or restricted information were detected. Avoid sharing actual secrets or confidential details.";
-    } else if (hasSensitiveInformation) {
-        contextRisk = "MEDIUM";
-
-        explanation =
-            "Potentially sensitive information was detected. Review whether it needs to appear in the message.";
-    }
-
-    if (
-        mentionsPrivateRecipient &&
-        contextRisk === "HIGH" &&
-        !mentionsExternalRecipient
-    ) {
-        explanation +=
-            " A private or authorized recipient is also mentioned, but the wording alone cannot verify that the recipient is authorized.";
-    }
-
-    return {
-        risk: contextRisk,
-        explanation: explanation,
-        sharesInformation: sharesInformation,
-        mentionsExternalRecipient: mentionsExternalRecipient
-    };
-}
-
-
-// --------------------------------------------------
-// 6. REMOVE OVERLAPPING REDACTION RANGES
-// --------------------------------------------------
-
-function removeOverlappingMatches(matches) {
-    const sortedMatches = [...matches].sort(function (a, b) {
-        return a.start - b.start || b.end - a.end;
-    });
-
-    const filteredMatches = [];
-
-    sortedMatches.forEach(function (match) {
-        const previous = filteredMatches[filteredMatches.length - 1];
-
-        if (!previous || match.start >= previous.end) {
-            filteredMatches.push(match);
-        }
-    });
-
-    return filteredMatches;
-}
-
-
-// --------------------------------------------------
-// 7. CREATE PROTECTED TEXT
-// --------------------------------------------------
-
-function redactText(originalText, matches) {
-    let protectedText = originalText;
-
-    for (let i = matches.length - 1; i >= 0; i--) {
-        const match = matches[i];
-
-        protectedText =
-            protectedText.slice(0, match.start) +
-            match.replacement +
-            protectedText.slice(match.end);
-    }
-
-    return protectedText;
-}
-
-
-// --------------------------------------------------
-// 8. DISPLAY A RISK CARD SAFELY
-// --------------------------------------------------
-
-function createRiskCard(name, severity, explanation, count) {
-    const item = document.createElement("div");
-    item.className = "risk-item";
-
-    const title = document.createElement("strong");
-    title.textContent = count
-        ? name + " (" + count + ")"
-        : name;
-
-    const description = document.createElement("p");
-    description.textContent = explanation;
-
-    const tag = document.createElement("span");
-    tag.className = "risk-tag tag-" + severity.toLowerCase();
-    tag.textContent = severity + " RISK";
-
-    item.append(title, description, tag);
-
-    return item;
-}
-
-
-// --------------------------------------------------
-// 9. MAIN ANALYSIS FUNCTION
-// --------------------------------------------------
-
-function analyzeText(originalText) {
-    const detection = detectSensitiveInformation(originalText);
-
-    const detectedRisks = detection.detectedRisks;
-    const matchesToRedact = detection.matchesToRedact;
-
-    const filteredMatches =
-        removeOverlappingMatches(matchesToRedact);
-
-    const context = analyzeContext(originalText, detectedRisks);
-
-    const overallRisk = context.risk;
-
-    const protectedText =
-        redactText(originalText, filteredMatches);
-
-    // Show the results panel.
-
-    emptyState.hidden = true;
-    results.hidden = false;
-
-    riskLevel.textContent = overallRisk;
-    riskLevel.className = "risk-" + overallRisk.toLowerCase();
-
-    // Include the context assessment in the displayed count.
-
-    riskCount.textContent = detectedRisks.length + 1;
-
-    riskList.replaceChildren();
-
-    // Always explain the context assessment.
-
-    riskList.appendChild(
-        createRiskCard(
-            "Contextual Sharing Analysis",
-            context.risk,
-            context.explanation
-        )
     );
 
-    if (detectedRisks.length === 0) {
-        const message = document.createElement("div");
-        message.className = "risk-item";
 
-        const title = document.createElement("strong");
-        title.textContent = "No matching sensitive-data rules triggered";
+    console.log(
+        "PrivacyShield script.js loaded successfully."
+    );
 
-        const description = document.createElement("p");
-        description.textContent =
-            "This does not guarantee that the message is safe. " +
-            "The detector may miss sensitive information that its rules do not recognize.";
-
-        message.append(title, description);
-        riskList.appendChild(message);
-    }
-
-    detectedRisks.forEach(function (risk) {
-        riskList.appendChild(
-            createRiskCard(
-                risk.name,
-                risk.severity,
-                risk.explanation,
-                risk.count
-            )
-        );
-    });
-
-    // Display the protected preview as plain text.
-
-    redactedOutput.textContent = protectedText;
-
-    // Give a practical recommendation.
-
-    let recommendation;
-
-    if (overallRisk === "HIGH") {
-        recommendation =
-            "⚠️ HIGH RISK: Do not share this message yet. Review the detected items, remove actual secrets, and confirm that the recipient is authorized.";
-    } else if (overallRisk === "MEDIUM") {
-        recommendation =
-            "🔎 MEDIUM RISK: Review the detected information and remove personal details that are not necessary before sharing.";
-    } else {
-        recommendation =
-            "✅ LOW RISK: No high-risk pattern was identified. Review the message manually before sharing because this scan cannot guarantee privacy.";
-    }
-
-    if (filteredMatches.length > 0) {
-        actionSummary.textContent =
-            recommendation +
-            " " +
-            filteredMatches.length +
-            " text segment(s) were redacted in the preview only.";
-    } else {
-        actionSummary.textContent = recommendation;
-    }
-
-    // Update dashboard statistics.
-
-    scanNumber++;
-    riskTotal += detectedRisks.length;
-    actionTotal += filteredMatches.length;
-
-    totalScans.textContent = scanNumber;
-    totalRisks.textContent = riskTotal;
-    totalActions.textContent = actionTotal;
-
-    // Add a new activity record.
-
-    const emptyRow = document.getElementById("noActivity");
-
-    if (emptyRow) {
-        emptyRow.remove();
-    }
-
-    const row = document.createElement("tr");
-
-    const scanCell = document.createElement("td");
-    scanCell.textContent = "#" + scanNumber;
-
-    const levelCell = document.createElement("td");
-    levelCell.textContent = overallRisk;
-
-    const countCell = document.createElement("td");
-    countCell.textContent = detectedRisks.length;
-
-    const actionCell = document.createElement("td");
-    actionCell.textContent =
-        filteredMatches.length > 0
-            ? "Redacted in preview"
-            : "No matching rules";
-
-    row.append(scanCell, levelCell, countCell, actionCell);
-
-    activityBody.prepend(row);
-}
-
-
-// --------------------------------------------------
-// 10. CLEAR BUTTON
-// --------------------------------------------------
-
-clearButton.addEventListener("click", function () {
-    inputText.value = "";
-
-    charCount.textContent = "0 characters";
-
-    emptyState.hidden = false;
-    results.hidden = true;
-
-    inputText.focus();
 });

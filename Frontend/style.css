@@ -1,1034 +1,677 @@
-/* =========================================
-   PRIVACYSHIELD AI
-   Professional Cybersecurity Dashboard
-========================================= */
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-
-
-/* ---------- 1. DESIGN SYSTEM ---------- */
-
-:root {--background: #070b14;--surface: #0e1625;--surface-light: #131f32;--surface-hover: #192840;
-
-    --border: rgba(139, 164, 201, 0.15);
-
-    --text: #f0f5ff;
-    --muted: #91a2bd;
-
-    --blue: #58a6ff;
-    --purple: #a78bfa;
-    --cyan: #55e6ff;
-
-    --green: #36dfaa;
-    --yellow: #ffca6a;
-    --red: #ff7087;
-
-    --radius: 18px;
-    --transition: 0.3s ease;
-}
-
-
-/* ---------- 2. RESET ---------- */
-
 * {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-    scroll-behavior: smooth;
 }
+
 
 body {
-    font-family: 'Inter', Arial, sans-serif;
-    background: var(--background);
-    color: var(--text);
-    line-height: 1.7;
-    overflow-x: hidden;
-}
 
-body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    pointer-events: none;
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
 
     background:
-        radial-gradient(
-            ellipse at 10% 5%,
-            rgba(56, 117, 255, 0.12),
-            transparent 35%
-        ),
-        radial-gradient(
-            ellipse at 90% 25%,
-            rgba(140, 76, 255, 0.09),
-            transparent 32%
+        linear-gradient(
+            135deg,
+            #07152f,
+            #061c3d,
+            #082b55
         );
-}
-
-a {
-    color: inherit;
-    text-decoration: none;
-}
-
-button,
-textarea {
-    font: inherit;
-}
-
-button {
-    cursor: pointer;
-}
-
-button:focus-visible,
-a:focus-visible,
-textarea:focus-visible {
-    outline: 2px solid var(--cyan);
-    outline-offset: 4px;
-}
-
-::selection {
-    background: rgba(88, 166, 255, 0.35);
-}
-
-
-/* ---------- 3. NAVIGATION ---------- */
-
-.navbar {
-    min-height: 82px;
-    padding: 18px 7%;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 25px;
-
-    position: sticky;
-    top: 0;
-    z-index: 100;
-
-    background: rgba(7, 11, 20, 0.86);
-    backdrop-filter: blur(18px);
-
-    border-bottom: 1px solid var(--border);
-}
-
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-
-    font-size: 20px;
-    font-weight: 800;
-    letter-spacing: -0.7px;
-    white-space: nowrap;
-}
-
-.logo-icon {
-    font-size: 29px;
-}
-
-.ai {
-    color: var(--blue);
-}
-
-.navbar nav {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 28px;
-}
-
-.navbar nav a {
-    color: var(--muted);
-    font-size: 13px;
-    font-weight: 500;
-
-    transition: color var(--transition);
-}
-
-.navbar nav a:hover {
-    color: var(--cyan);
-}
-
-.status {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-
-    color: var(--green);
-    font-size: 12px;
-    white-space: nowrap;
-}
-
-.status-dot {
-    width: 8px;
-    height: 8px;
-
-    border-radius: 50%;
-    background: var(--green);
-
-    box-shadow: 0 0 12px rgba(54, 223, 170, 0.6);
-
-    display: inline-block;
-    flex-shrink: 0;
-}
-
-
-/* ---------- 4. MAIN CONTAINER ---------- */
-
-.container {
-    width: 86%;
-    max-width: 1440px;
-    margin: auto;
-}
-
-
-/* ---------- 5. HERO SECTION ---------- */
-
-.hero {
-    min-height: 460px;
-    padding: 75px 0;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 50px;
-}
-
-.hero-content {
-    max-width: 680px;
-}
-
-.eyebrow {
-    display: inline-block;
-    margin-bottom: 16px;
-
-    color: var(--cyan);
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 2.4px;
-}
-
-.hero h1 {
-    font-size: clamp(40px, 5.2vw, 70px);
-    line-height: 1.12;
-    letter-spacing: -3px;
-
-    margin-bottom: 23px;
-}
-
-.hero h1 span {
-    background: linear-gradient(
-        100deg,
-        var(--blue),
-        var(--purple),
-        var(--cyan)
-    );
-
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
-
-.hero-content > p {
-    max-width: 560px;
-    color: var(--muted);
-
-    font-size: 15px;
-    line-height: 1.9;
-
-    margin-bottom: 32px;
-}
-
-
-/* ---------- 6. BUTTONS ---------- */
-
-.primary-button {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    gap: 9px;
-
-    padding: 14px 23px;
-
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    border-radius: 11px;
 
     color: white;
 
-    background: linear-gradient(
-        110deg,
-        #347fe8,
-        #7651e8
-    );
+    min-height: 100vh;
 
-    font-size: 13px;
-    font-weight: 700;
-
-    box-shadow: 0 7px 25px rgba(67, 112, 245, 0.18);
-
-    transition:
-        transform var(--transition),
-        box-shadow var(--transition),
-        filter var(--transition);
-}
-
-.primary-button:hover {
-    transform: translateY(-3px);
-
-    box-shadow: 0 12px 32px rgba(67, 112, 245, 0.32);
-
-    filter: brightness(1.12);
-}
-
-.primary-button:disabled {
-    cursor: wait;
-    opacity: 0.7;
-    transform: none;
-}
-
-.full-width {
-    width: 100%;
-}
-
-.text-button {
-    background: transparent;
-    border: none;
-    color: var(--blue);
-    transition: color var(--transition);
-}
-
-.text-button:hover {
-    color: var(--cyan);
 }
 
 
-/* ---------- 7. HERO SHIELD ---------- */
+/* =========================
+   NAVBAR
+========================= */
 
-.hero-shield {
-    min-width: 270px;
+.navbar {
+
+    height: 75px;
 
     display: flex;
-    flex-direction: column;
+
     align-items: center;
-    gap: 27px;
-}
 
-.shield-circle {
-    width: 235px;
-    height: 235px;
+    justify-content: space-between;
 
-    display: grid;
-    place-items: center;
+    padding: 0 6%;
 
-    border-radius: 50%;
+    border-bottom:
+        1px solid rgba(255,255,255,0.08);
 
     background:
-        radial-gradient(
-            circle,
-            rgba(44, 94, 174, 0.4),
-            rgba(13, 22, 40, 0.6) 65%
-        );
+        rgba(3,12,30,0.8);
 
-    border: 1px solid rgba(88, 166, 255, 0.28);
+    backdrop-filter: blur(12px);
 
-    box-shadow:
-        0 0 40px rgba(88, 166, 255, 0.10),
-        inset 0 0 40px rgba(88, 166, 255, 0.06);
-
-    animation: shieldFloat 4s ease-in-out infinite;
 }
 
-.shield-circle span {
-    font-size: 100px;
 
-    filter: drop-shadow(
-        0 0 25px rgba(88, 166, 255, 0.28)
-    );
-}
+.logo {
 
-.floating-badge {
-    padding: 11px 17px;
+    text-decoration: none;
+
+    color: white;
+
+    font-size: 20px;
+
+    font-weight: bold;
 
     display: flex;
+
     align-items: center;
+
     gap: 10px;
 
-    border: 1px solid var(--border);
-    border-radius: 30px;
-
-    background: rgba(19, 31, 50, 0.85);
-    backdrop-filter: blur(10px);
-
-    font-size: 11px;
-    font-weight: 600;
 }
 
 
-/* ---------- 8. STATISTICS ---------- */
+.logo-icon {
 
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 22px;
+    font-size: 25px;
 
-    margin-bottom: 85px;
 }
 
-.stat-card {
-    position: relative;
-    overflow: hidden;
 
-    padding: 27px;
+.ai {
 
-    background: linear-gradient(
-        145deg,
-        rgba(19, 31, 50, 0.95),
-        rgba(12, 20, 34, 0.95)
-    );
+    color: #20d9ff;
 
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-
-    transition:
-        transform var(--transition),
-        border-color var(--transition),
-        box-shadow var(--transition);
 }
 
-.stat-card::after {
-    content: "";
 
-    position: absolute;
-    width: 110px;
-    height: 110px;
+nav {
 
-    top: -65px;
-    right: -40px;
+    display: flex;
+
+    gap: 35px;
+
+}
+
+
+nav a {
+
+    color: #9bb5d8;
+
+    text-decoration: none;
+
+    font-size: 14px;
+
+}
+
+
+nav a:hover {
+
+    color: #20d9ff;
+
+}
+
+
+.status {
+
+    color: #76f7cf;
+
+    font-size: 13px;
+
+}
+
+
+.status-dot {
+
+    display: inline-block;
+
+    width: 8px;
+
+    height: 8px;
+
+    background: #20f5c4;
 
     border-radius: 50%;
-    background: rgba(88, 166, 255, 0.08);
 
-    filter: blur(8px);
-}
+    margin-right: 6px;
 
-.stat-card:hover {
-    transform: translateY(-5px);
-
-    border-color: rgba(88, 166, 255, 0.35);
-
-    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.15);
-}
-
-.stat-icon {
-    width: 44px;
-    height: 44px;
-
-    display: grid;
-    place-items: center;
-
-    border-radius: 12px;
-    font-size: 23px;
-
-    margin-bottom: 19px;
-}
-
-.blue {
-    color: var(--blue);
-    background: rgba(88, 166, 255, 0.13);
-}
-
-.red {
-    color: var(--red);
-    background: rgba(255, 112, 135, 0.12);
-}
-
-.green {
-    color: var(--green);
-    background: rgba(54, 223, 170, 0.12);
-}
-
-.stat-card p {
-    color: var(--muted);
-    font-size: 13px;
-    font-weight: 500;
-}
-
-.stat-card h2 {
-    margin: 7px 0;
-
-    font-size: 38px;
-    font-weight: 800;
-    letter-spacing: -1px;
-}
-
-.stat-card > span {
-    color: var(--muted);
-    font-size: 11px;
 }
 
 
-/* ---------- 9. SECTION HEADINGS ---------- */
+/* =========================
+   CONTAINER
+========================= */
 
-.scanner-section,
-.activity-section {
-    margin-bottom: 85px;
-}
+.container {
 
-.section-heading {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 22px;
+    width: 90%;
 
-    margin-bottom: 30px;
-}
+    max-width: 1250px;
 
-.section-heading h2 {
-    margin-bottom: 8px;
+    margin: auto;
 
-    font-size: 29px;
-    font-weight: 700;
-    letter-spacing: -1px;
-}
-
-.section-heading p {
-    color: var(--muted);
-    font-size: 13px;
-}
-
-.demo-badge {
-    padding: 8px 12px;
-
-    color: var(--blue);
-    background: rgba(88, 166, 255, 0.08);
-
-    border: 1px solid rgba(88, 166, 255, 0.25);
-    border-radius: 8px;
-
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.7px;
-
-    white-space: nowrap;
 }
 
 
-/* ---------- 10. SCANNER PANELS ---------- */
+/* =========================
+   HERO
+========================= */
 
-.scanner-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 24px;
+.hero {
+
+    padding: 80px 0 55px;
+
 }
 
-.panel {
-    min-width: 0;
-    padding: 28px;
 
-    background: rgba(14, 22, 37, 0.9);
+.eyebrow {
 
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
-
-    transition: border-color var(--transition);
-}
-
-.panel:hover {
-    border-color: rgba(88, 166, 255, 0.23);
-}
-
-.panel-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-
-    margin-bottom: 25px;
-}
-
-.panel-header h3 {
-    font-size: 16px;
-    font-weight: 700;
-}
-
-.small-label {
-    color: var(--muted);
-    font-size: 9px;
-    font-weight: 600;
-    letter-spacing: 1.2px;
-}
-
-.panel label {
-    display: block;
-    margin-bottom: 11px;
+    color: #20d9ff;
 
     font-size: 12px;
-    font-weight: 600;
+
+    font-weight: bold;
+
+    letter-spacing: 2px;
+
+    margin-bottom: 15px;
+
 }
 
+
+.hero h1 {
+
+    font-size: 48px;
+
+    max-width: 750px;
+
+    line-height: 1.1;
+
+}
+
+
+.hero h1 span {
+
+    color: #20d9ff;
+
+}
+
+
+.hero-text {
+
+    color: #9bb5d8;
+
+    max-width: 650px;
+
+    margin-top: 20px;
+
+    line-height: 1.7;
+
+}
+
+
+/* =========================
+   SCANNER
+========================= */
+
+.scanner-section {
+
+    padding-bottom: 70px;
+
+}
+
+
+.section-heading {
+
+    margin-bottom: 25px;
+
+}
+
+
+.section-heading h2 {
+
+    font-size: 30px;
+
+}
+
+
+.scanner-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 25px;
+
+}
+
+
+.panel {
+
+    background:
+        rgba(9,35,72,0.8);
+
+    border:
+        1px solid rgba(74,187,255,0.2);
+
+    border-radius: 20px;
+
+    padding: 30px;
+
+    box-shadow:
+        0 20px 60px
+        rgba(0,0,0,0.25);
+
+}
+
+
+.panel-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-bottom: 25px;
+
+}
+
+
+.panel-header h3 {
+
+    font-size: 20px;
+
+}
+
+
+.small-label {
+
+    color: #20d9ff;
+
+    font-size: 10px;
+
+    letter-spacing: 2px;
+
+}
+
+
+label {
+
+    display: block;
+
+    color: #a9bfdb;
+
+    font-size: 13px;
+
+    margin-bottom: 10px;
+
+}
+
+
 textarea {
+
     width: 100%;
-    min-height: 220px;
+
+    min-height: 250px;
+
     resize: vertical;
 
-    padding: 17px;
+    border: 1px solid
+        rgba(255,255,255,0.12);
 
-    color: var(--text);
-    background: #080f1c;
-
-    border: 1px solid var(--border);
     border-radius: 12px;
+
+    padding: 18px;
+
+    background:
+        rgba(1,15,35,0.8);
+
+    color: white;
 
     outline: none;
 
-    font-size: 12px;
-    line-height: 1.9;
+    font-size: 15px;
 
-    transition:
-        border-color var(--transition),
-        box-shadow var(--transition);
+    line-height: 1.6;
+
 }
 
-textarea::placeholder {
-    color: #71819a;
-}
 
 textarea:focus {
-    border-color: var(--blue);
 
-    box-shadow:
-        0 0 0 3px rgba(88, 166, 255, 0.08);
+    border-color: #20d9ff;
+
 }
+
 
 .input-footer {
+
     display: flex;
+
     justify-content: space-between;
+
     align-items: center;
 
-    margin: 11px 0 21px;
+    margin-top: 10px;
 
-    color: var(--muted);
-    font-size: 11px;
-}
-
-.privacy-note {
-    margin-top: 15px;
-
-    color: var(--muted);
-    font-size: 10px;
-    line-height: 1.8;
 }
 
 
-/* ---------- 11. EMPTY RESULTS ---------- */
+#charCount {
 
-.empty-state {
-    min-height: 390px;
-    padding: 25px;
+    color: #7190b5;
 
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-    text-align: center;
-}
-
-.empty-icon {
-    width: 75px;
-    height: 75px;
-
-    display: grid;
-    place-items: center;
-
-    margin-bottom: 22px;
-
-    border: 1px solid var(--border);
-    border-radius: 22px;
-
-    background: var(--surface-light);
-
-    font-size: 34px;
-}
-
-.empty-state h3 {
-    margin-bottom: 10px;
-    font-size: 16px;
-}
-
-.empty-state p {
-    max-width: 310px;
-
-    color: var(--muted);
     font-size: 12px;
-    line-height: 1.9;
+
 }
 
 
-/* ---------- 12. DETECTION RESULTS ---------- */
+.clear-btn {
 
-.risk-summary {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
+    background: transparent;
 
-    padding: 22px;
+    border: none;
 
-    background: var(--surface-light);
+    color: #20d9ff;
 
-    border: 1px solid var(--border);
-    border-radius: 13px;
+    cursor: pointer;
 
-    margin-bottom: 27px;
 }
 
-.result-label {
-    color: var(--muted);
-    font-size: 11px;
-}
 
-.risk-summary h2 {
-    margin-top: 7px;
+.analyze-btn {
 
-    font-size: 25px;
-    font-weight: 800;
-}
+    width: 100%;
 
-.risk-low {
-    color: var(--green);
-}
+    margin-top: 22px;
 
-.risk-medium {
-    color: var(--yellow);
-}
-
-.risk-high {
-    color: var(--red);
-}
-
-.subheading {
-    margin-bottom: 14px;
-    font-size: 13px;
-    font-weight: 700;
-}
-
-.risk-item {
     padding: 16px;
-    margin-bottom: 11px;
 
-    background: #0a1321;
+    border: none;
 
-    border: 1px solid var(--border);
     border-radius: 12px;
 
-    transition: border-color var(--transition);
+    background:
+        linear-gradient(
+            90deg,
+            #08ccef,
+            #168dff
+        );
+
+    color: white;
+
+    font-size: 15px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
 }
 
-.risk-item:hover {
-    border-color: rgba(88, 166, 255, 0.3);
+
+.analyze-btn:hover {
+
+    transform: translateY(-1px);
+
 }
 
-.risk-item strong {
-    display: block;
-    margin-bottom: 7px;
 
-    font-size: 12px;
-}
+.demo-note {
 
-.risk-item p {
-    color: var(--muted);
+    color: #6f8cac;
+
     font-size: 11px;
-    line-height: 1.8;
-}
-
-.risk-tag {
-    display: inline-block;
 
     margin-top: 12px;
-    padding: 4px 9px;
 
-    border-radius: 6px;
-
-    font-size: 9px;
-    font-weight: 800;
-    letter-spacing: 0.5px;
 }
 
-.tag-high {
-    color: #ff92a4;
-    background: rgba(255, 112, 135, 0.12);
+
+/* =========================
+   READY MESSAGE
+========================= */
+
+.ready-message {
+
+    text-align: center;
+
+    padding: 50px 20px;
+
+    color: #8fa9c8;
+
 }
 
-.tag-medium {
-    color: #ffda88;
-    background: rgba(255, 202, 106, 0.12);
+
+.ready-icon {
+
+    font-size: 45px;
+
+    margin-bottom: 15px;
+
 }
 
-.tag-low {
-    color: var(--green);
-    background: rgba(54, 223, 170, 0.12);
+
+.ready-message h3 {
+
+    color: white;
+
+    margin-bottom: 10px;
+
 }
 
-.redacted-output {
-    padding: 18px;
-    margin-bottom: 16px;
 
-    background: rgba(18, 52, 44, 0.55);
+.ready-message p {
 
-    border: 1px solid rgba(54, 223, 170, 0.22);
+    line-height: 1.6;
+
+    font-size: 14px;
+
+}
+
+
+/* =========================
+   RESULTS
+========================= */
+
+.hidden {
+
+    display: none;
+
+}
+
+
+.risk-summary {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 25px;
+
+    border-radius: 15px;
+
+    background:
+        rgba(35,104,160,0.35);
+
+    border:
+        1px solid
+        rgba(100,200,255,0.2);
+
+}
+
+
+.risk-summary span {
+
+    display: block;
+
+    color: #9db6d3;
+
+    font-size: 12px;
+
+    margin-bottom: 8px;
+
+}
+
+
+.risk-summary strong {
+
+    font-size: 30px;
+
+}
+
+
+.items-count {
+
+    text-align: right;
+
+}
+
+
+.result-section {
+
+    margin-top: 25px;
+
+}
+
+
+.result-section h3 {
+
+    margin-bottom: 15px;
+
+}
+
+
+.risk-item {
+
+    padding: 15px;
+
+    margin-bottom: 10px;
+
+    border-radius: 10px;
+
+    background:
+        rgba(0,0,0,0.2);
+
+    border-left:
+        4px solid #20d9ff;
+
+}
+
+
+.risk-item strong {
+
+    display: block;
+
+    margin-bottom: 5px;
+
+}
+
+
+.risk-item span {
+
+    color: #91a9c5;
+
+    font-size: 13px;
+
+}
+
+
+.protected-output {
+
+    background:
+        rgba(0,0,0,0.25);
+
+    border:
+        1px solid
+        rgba(32,217,255,0.25);
+
     border-radius: 12px;
 
-    color: #a8f5d8;
+    padding: 20px;
 
-    font-size: 12px;
-    line-height: 1.9;
+    color: #d8f7ff;
 
-    overflow-wrap: anywhere;
+    line-height: 1.7;
+
     white-space: pre-wrap;
-}
 
-.action-summary {
-    color: var(--green);
-    font-size: 11px;
-    line-height: 1.8;
-}
+    word-break: break-word;
 
-
-/* ---------- 13. ACTIVITY TABLE ---------- */
-
-.table-wrapper {
-    overflow-x: auto;
-
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-}
-
-table {
-    width: 100%;
-    min-width: 560px;
-
-    border-collapse: collapse;
-
-    background: var(--surface);
-}
-
-th,
-td {
-    padding: 19px 22px;
-
-    text-align: left;
-    border-bottom: 1px solid var(--border);
-
-    font-size: 12px;
-}
-
-th {
-    color: var(--muted);
-    background: var(--surface-light);
-
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-}
-
-td {
-    color: var(--text);
-}
-
-tbody tr:last-child td {
-    border-bottom: none;
-}
-
-tbody tr:hover {
-    background: rgba(88, 166, 255, 0.035);
-}
-
-.no-activity {
-    padding: 35px;
-    text-align: center;
-    color: var(--muted);
-}
-
-
-/* ---------- 14. FOOTER ---------- */
-
-footer {
-    padding: 36px 0 45px;
-
-    border-top: 1px solid var(--border);
-
-    text-align: center;
-}
-
-footer .logo {
-    justify-content: center;
-    margin-bottom: 12px;
-}
-
-footer p,
-footer > span {
-    color: var(--muted);
-    font-size: 11px;
-}
-
-footer > span {
-    display: block;
-    margin-top: 15px;
-}
-
-
-/* ---------- 15. ANIMATIONS ---------- */
-
-@keyframes shieldFloat {
-
-    0%, 100% {
-        transform: translateY(0);
-    }
-
-    50% {
-        transform: translateY(-10px);
-    }
+    min-height: 80px;
 
 }
 
 
-/* ---------- 16. TABLET ---------- */
+/* =========================
+   ACTIVITY
+========================= */
 
-@media (max-width: 950px) {
+.activity-section {
 
-    .navbar {
-        padding: 17px 5%;
-        flex-wrap: wrap;
-    }
-
-    .navbar nav {
-        order: 3;
-        width: 100%;
-        justify-content: center;
-    }
-
-    .container {
-        width: 90%;
-    }
-
-    .hero {
-        padding: 55px 0;
-    }
-
-    .hero-shield {
-        min-width: 190px;
-    }
-
-    .shield-circle {
-        width: 175px;
-        height: 175px;
-    }
-
-    .shield-circle span {
-        font-size: 75px;
-    }
+    padding-bottom: 80px;
 
 }
 
 
-/* ---------- 17. MOBILE ---------- */
+.activity-card {
 
-@media (max-width: 700px) {
+    padding: 25px;
 
-    .navbar {
-        gap: 15px;
+    border-radius: 15px;
+
+    background:
+        rgba(9,35,72,0.8);
+
+    color: #9bb5d8;
+
+}
+
+
+.activity-dot {
+
+    display: inline-block;
+
+    width: 9px;
+
+    height: 9px;
+
+    border-radius: 50%;
+
+    background: #20f5c4;
+
+    margin-right: 8px;
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 800px) {
+
+    nav {
+
+        display: none;
+
     }
 
-    .logo {
-        font-size: 17px;
-    }
-
-    .logo-icon {
-        font-size: 24px;
-    }
-
-    .navbar nav {
-        gap: 18px;
-    }
-
-    .navbar nav a {
-        font-size: 11px;
-    }
-
-    .status {
-        font-size: 10px;
-    }
-
-    .hero {
-        flex-direction: column;
-        align-items: flex-start;
-
-        padding: 50px 0;
-    }
-
-    .hero h1 {
-        font-size: clamp(39px, 10vw, 55px);
-        letter-spacing: -2px;
-    }
-
-    .hero-content > p {
-        font-size: 13px;
-    }
-
-    .hero-shield {
-        align-self: center;
-        margin-top: 10px;
-    }
-
-    .stats-grid {
-        grid-template-columns: 1fr;
-        gap: 15px;
-
-        margin-bottom: 60px;
-    }
-
-    .stat-card {
-        padding: 23px;
-    }
 
     .scanner-grid {
+
         grid-template-columns: 1fr;
+
     }
 
-    .section-heading {
-        align-items: flex-start;
-        flex-direction: column;
-    }
 
-    .section-heading h2 {
-        font-size: 25px;
-    }
+    .hero h1 {
 
-    .panel {
-        padding: 19px;
-    }
+        font-size: 35px;
 
-    .scanner-section,
-    .activity-section {
-        margin-bottom: 60px;
-    }
-
-}
-
-
-/* ---------- 18. REDUCED MOTION ---------- */
-
-@media (prefers-reduced-motion: reduce) {
-
-    *,
-    *::before,
-    *::after {
-        scroll-behavior: auto !important;
-        animation: none !important;
-        transition: none !important;
     }
 
 }
