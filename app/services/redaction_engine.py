@@ -1,52 +1,94 @@
-from typing import List, Dict
-
-
 class RedactionEngine:
+    """
+    Redaction engine for the Context-Aware Data Privacy system.
 
-    def redact(
-        self,
-        text: str,
-        detections: List[Dict]
-    ) -> str:
+    Takes detections produced by PrivacyDetector and replaces
+    sensitive text with safe labels such as:
+        [PERSON]
+        [EMAIL]
+        [PHONE]
+        [FINANCIAL_INFORMATION]
+        [CONFIDENTIAL_INFORMATION]
+        [CREDENTIAL]
+    """
+
+    def __init__(self):
+        self.default_replacement = "[REDACTED]"
+
+    def redact(self, text, detections):
+        """
+        Redact sensitive portions of text.
+
+        Parameters:
+            text (str): Original workplace text.
+            detections (list): List of detection dictionaries.
+
+        Returns:
+            str: Redacted/processed text.
+        """
+
+        # Nothing to redact
+        if not text:
+            return text
 
         if not detections:
             return text
 
-        # Process from right to left so that
-        # replacing one entity does not change
-        # the positions of entities before it.
-        sorted_detections = sorted(
-            detections,
-            key=lambda item: item["start"],
+        processed_text = text
+
+        # Process from right to left.
+        # This prevents changing the indexes of earlier detections.
+        valid_detections = [
+            detection
+            for detection in detections
+            if isinstance(detection, dict)
+            and "start" in detection
+            and "end" in detection
+        ]
+
+        valid_detections.sort(
+            key=lambda detection: detection["start"],
             reverse=True
         )
 
-        sanitized_text = text
-
-        counters = {}
-
-        for detection in sorted_detections:
-
-            entity_type = detection["entity_type"]
-
-            if entity_type == "EMAIL":
-                replacement = "[REDACTED_EMAIL]"
-
-            elif entity_type == "PHONE":
-                replacement = "[REDACTED_PHONE]"
-
-            else:
-                count = counters.get(entity_type, 0) + 1
-                counters[entity_type] = count
-                replacement = f"[{entity_type}_{count}]"
+        for detection in valid_detections:
 
             start = detection["start"]
             end = detection["end"]
 
-            sanitized_text = (
-                sanitized_text[:start]
-                + replacement
-                + sanitized_text[end:]
+            # Make sure indexes are valid
+            if not isinstance(start, int) or not isinstance(end, int):
+                continue
+
+            if start < 0 or end > len(processed_text) or start >= end:
+                continue
+
+            # Get entity type
+            entity_type = detection.get(
+                "entity_type",
+                "REDACTED"
             )
 
-        return sanitized_text
+            # Create replacement label
+            replacement = f"[{entity_type}]"
+
+            # Replace sensitive text
+            processed_text = (
+                processed_text[:start]
+                + replacement
+                + processed_text[end:]
+            )
+
+        return processed_text
+
+
+# ---------------------------------------------------------
+# GLOBAL REDACTION ENGINE INSTANCE
+# ---------------------------------------------------------
+# privacy_service.py imports this object using:
+#
+# from app.services.redaction_engine import redactor
+#
+# Therefore this variable MUST be named "redactor".
+
+redactor = RedactionEngine()
